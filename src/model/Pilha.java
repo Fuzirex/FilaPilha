@@ -10,34 +10,105 @@ public class Pilha {
     private int fim;
     private int tamanho;
     private int qtdeElementos;
-    private int elementos[];
+    private String elementos[];
 
     public Pilha(int tamanho) {
         this.tamanho = tamanho;
-        inicio = 0;
-        fim = 0;
+        inicio = fim = -1;
         qtdeElementos = 0;
-        elementos = new int[tamanho];
+        elementos = new String[tamanho];
     }
 
-    public void empilhar(int valor) {
+    // RUN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+    public void run() {
+        while (true) {
+            Integer menuItem = Integer.valueOf(JOptionPane.showInputDialog(getMenuItens()));
+
+            switch (menuItem) {
+                case 1:
+                    String tarefa = JOptionPane.showInputDialog("Qual a nova tarefa?");
+                    empilhar(tarefa);
+                    break;
+
+                case 2:
+                    desempilhar();
+                    break;
+
+                case 3:
+                    verProximaTarefa();
+                    break;
+
+                case 4:
+                    verValores();
+                    break;
+
+                case 0:
+                    System.exit(0);
+                    break;
+            }
+        }
     }
 
-    public void desempilhar(int valor) {
+    private String getMenuItens() {
+        StringBuilder sb = new StringBuilder();
 
+        sb.append("1 - Adicionar tarefa\n");
+        sb.append("2 - Remover próxima tarefa\n");
+        sb.append("3 - Ver próxima tarefa\n");
+        sb.append("4 - Ver todas tarefas\n");
+        sb.append("0 - Sair");
+
+
+        return sb.toString();
     }
 
-    public void verTopo() {
-        JOptionPane.showMessageDialog(null, elementos[fim]);
+    // MÉTODOS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    public void empilhar(String valor) {
+        if (!estaCheia()) {
+            if (inicio == -1)
+                inicio++;
+            fim++;
+            elementos[fim] = valor;
+            qtdeElementos++;
+        } else
+            JOptionPane.showMessageDialog(null, "A pilha ja está cheia.");
+    }
+
+    public void desempilhar() {
+        if (!estaVazia()) {
+            String tarefaRemovida = elementos[fim];
+
+            fim--;
+            qtdeElementos--;
+
+            JOptionPane.showMessageDialog(null, "Tarefa Removida: " + tarefaRemovida);
+        } else
+            JOptionPane.showMessageDialog(null, "A pilha ja está vazia.");
     }
 
     public void verValores() {
-        String valores = "";
-        for (int i = fim; i >= 0; i--)
-            valores += elementos[i] + " - ";
+        if (estaVazia()) {
+            JOptionPane.showMessageDialog(null, "Sem tarefas.");
+        } else {
+            String valores = "";
+            for (int i = fim; i >= 0; i--)
+                valores += elementos[i] + " - ";
 
-        JOptionPane.showMessageDialog(null, valores);
+            JOptionPane.showMessageDialog(null, valores);
+        }
+    }
+
+    public String verUltimaTarefaRemovida() {
+        return elementos[fim + 1];
+    }
+
+    public void verProximaTarefa() {
+        if (estaVazia()) {
+            JOptionPane.showMessageDialog(null, "Sem tarefas.");
+        } else
+            JOptionPane.showMessageDialog(null, "Próxima tarefa: " + elementos[fim]);
     }
 
     public boolean estaVazia() {
@@ -45,6 +116,6 @@ public class Pilha {
     }
 
     public boolean estaCheia() {
-        return qtdeElementos == tamanho - 1;
+        return qtdeElementos == tamanho;
     }
 }
